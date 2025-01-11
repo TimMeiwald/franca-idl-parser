@@ -1,2 +1,2 @@
 # franca-idl-parser
-Franca IDL parser to allow for new tooling
+[Franca IDL](https://github.com/franca/franca) parser to allow for new tooling. Unfortunately the current repo seems unmaintained. 
