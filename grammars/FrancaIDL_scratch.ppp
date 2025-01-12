@@ -1,0 +1,40 @@
+# From xtext_common_terminals #
+<t_id> = (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/[0..9])); # Common to most PLS #
+<t_integer> = ['0'..'9']+; #Doubt this is correct but can handle later# 
+<t_ws> = (' '/'\t'/'\r'/'\n')+;
+<t_any_other> = ''; #Match anything don't currently support, add function manually#
+<t_ml_comment> = "\*", (!"*/", <t_any_other>)*, "*/"; #Can contain anything except */#
+<t_sl_comment> = "//", (!'\n', <t_any_other>)*, '\n';
+# FrancaIDL.xtext#
+<t_boolean> = "false"/"true";
+<t_big_integer> = <t_integer>/<hex>/<binary>;
+<_exponent> Inline = 'e', '-'?, <t_integer>;
+<t_double> = <t_integer>, '.', <t_integer>, <_exponent>?, 'd'; 
+<t_float> = <t_integer>, '.', <t_integer>, <_exponent>?, 'f';
+<_hex_char> Inline = ['0'..'9']/['a'..'f']/['A'..'F'];
+<t_hex> = ("0x"/"0X"), <_hex_char>+;
+<t_binary> = ("0b"/"0B"), ('0', '1')+;
+<t_annotation_string> = '@', (['a'..'z']/'-')+, (' ', '\t')*, ':', (!'@', ['A'..'Z']/['a'..'z]); #100% gonna break if any other chars get used this enough for test purposes now.#
+
+<FAnnotationBlock> = "<**", <FAnnotation>+, "**>";
+<FAnnotation> = <t_annotation_string>;
+
+<OperatorOr> = "||";
+<OperatorAnd> = "&&";
+<OperatorEquality> = "=="/"!=";
+<OperatorRelational> = '<'/"<="/">="/">";
+<OperatorAdditive> = '+'/'-';
+<OperatorMultiplicative> = '*'/'/';
+<OperatorUnary> = '!'/'-';
+
+
+<FCurrentError> = <ErrorReferenceTerminal>;
+<ErrorReferenceTerminal> = "errorval";
+<FMethodErrorEnumRef> = "errordef", '.', (<FEnumerator/<t_id>>), 
+<FQualifiedElementRef> = 'WAAAGH'#Don't really get what this does yet#
+<FConstant> = <FFloatConstant>/<FDoubleConstant>/<FIntegerConstant>/<FBooleanConstant>/<FStringConstant>;
+<FDoubleConstant> = <t_double>;
+<FFloatConstant> = <t_float>;
+<FIntegerConstant> = <t_big_integer>;
+<FBooleanConstant> = <t_boolean>;
+<FStringConstant> = <String>;

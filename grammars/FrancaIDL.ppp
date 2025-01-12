@@ -1,0 +1,39 @@
+<Grammar> = <package>;
+<ws_sole> Inline = ' '/'\t'/'\r';
+<ws> Inline = <ws_sole>*;
+<wsn_sole> Inline = ' '/'\t'/'\r'/'\n';
+<wsn> Inline = <wsn_sole>*;
+<package> = "package", <ws>, <uri_string>, <ws>*, '\n'; #Describes the package import#
+
+<uri_string> = <letter>+, ('.', <letter>+)*;
+<letter> = ['A'..'Z']/['a'..'z'];
+<variable_str> Inline = (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9'])); # Common to most PLS #
+
+<ascii> = [0x00..0xFF];
+<multiline_comment> = "<**", (!"**>", <ascii>)*, "**>";
+<comment> = "//", (!'\n', <ascii>)*;
+<annotation_block> = "<**", (!"**>", <annotation_block>)+, "**>";
+<annotation> = '@', <letter>+, <ws>*, ':', (!'@', <ascii>*);
+
+
+<interface> = "interface", <wsn>, <s_interface>, <wsn>, '{', <wsn>, <interface_container>, <wsn>, '}';
+<interface_container> = <version>, <wsn>, (<method>, <broadcast>, <typedef>)+;
+<version> = <version>, <wsn>, '{', <wsn>, <major>, <wsn>, <minor>, <wsn>, '}';
+<integer> = ['0'..'9']+; #Could prevent leading zeros but whatever#
+<major> = "major", <ws>, <integer>;
+<minor> = "minor", <ws>, <integer>;
+
+<s_type> = <variable_str>, ("[]")?;
+<s_variable> = <variable_str>;
+<s_interface> = <variable_str>;
+<declaration> = <s_type>, <ws>*, <s_variable>, <wsn>*;
+<attribute> = "attribute", <ws>, <type>, <ws>, <s_variable>;
+<enumeration> = <annotation_block>, <wsn>, "enumeration", <ws>, <s_type>, <wsn>, '{', <enum_value>+,'}';
+<enum_value> = <s_variable>, <ws>, ('=', <integer>)?,'\n';
+<struct> = <annotation_block>, <wsn>, "struct", <ws>, <s_type>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}';
+<broadcast> =  <wsn>, <annotation_block>, <wsn>, "broadcast", <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
+<method> = <wsn>, <annotation_block>, <wsn>, "method", <wsn>, '{', <wsn>, <in>?, <wsn>, <out>?, '}';
+<in> = <wsn>, "in", <wsn>, '{', <wsn>, <declaration>*,  <wsn>, '}', <wsn>;
+<out> = <wsn>, "out", <wsn>, '{', <wsn>, <declaration>*,  <wsn>, '}', <wsn>;
+<typedef> = <wsn>, <annotation_block>, <wsn>, "typedef", <ws>, <s_type>, <ws>, "is", <ws>, <s_type>;
+<psm> = "WAAAAGH - Not Yet Implemented"; #Program State Machine#

@@ -1,2 +1,6 @@
-<id> = ([a..z]/[A..Z]/'_'), (([a..z]/[A..Z]/'_'/[0..9]));
-<integer> = [0..9]+; 
+<t_id> = ([a..z]/[A..Z]/'_'), (([a..z]/[A..Z]/'_'/[0..9])); # Common to most PLS #
+<t_integer> = [0..9]+; #Doubt this is correct but can handle later# 
+<t_ws> = (' '/'\t'/'\r'/'\n')+;
+<t_any_other> = ''; #Match anything don't currently support, add function manually#
+<t_ml_comment> = "\*", (!"*/", <t_any_other>)*, "*/"; #Can contain anything except */#
+<t_sl_comment> = "//", (!'\n', <t_any_other>)*, '\n';
