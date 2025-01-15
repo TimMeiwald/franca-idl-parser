@@ -1,0 +1,9 @@
+[package]
+name = "franca-idl-parser-tests"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+franca-idl-parser = { path = "../franca-idl-parser" }
