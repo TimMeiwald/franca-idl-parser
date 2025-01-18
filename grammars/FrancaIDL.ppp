@@ -13,7 +13,8 @@
 <multiline_comment> = "<**", (!"**>", <ascii>)*, "**>";
 <comment> = "//", (!'\n', <ascii>)*;
 <annotation_block> = "<**", <wsn>, (!"**>", <annotation>, <wsn>)+, <wsn>, "**>";
-<annotation> = '@', <annotation_name>, <ws>, ':', (!'@', !"**>",<ascii>)*;
+<annotation> = '@', <annotation_name>, <ws>, ':', <annotation_content>;
+<annotation_content> = (!'@', !"**>",<ascii>)*;
 <annotation_name> = <annotation_name_char>+;
 <annotation_name_char> Inline = <letter>/'-';
 
@@ -27,8 +28,8 @@
 <s_type> = <variable_str>, ("[]")?;
 <s_variable> = <variable_str>;
 <s_interface> = <variable_str>;
-<declaration> = <s_type>, <ws>*, <s_variable>, <wsn>*;
-<attribute> = "attribute", <ws>, <s_type>, <ws>, <s_variable>;
+<declaration> = <s_type>, <ws_sole>+, <s_variable>, <wsn>*;
+<attribute> = "attribute", <ws_sole>+, <s_type>, <ws_sole>+, <s_variable>;
 <enumeration> = <annotation_block>, <wsn>, "enumeration", <ws>, <s_type>, <wsn>, '{', <enum_value>+,'}';
 <enum_value> = <s_variable>, <ws>, ('=', <integer>)?,'\n';
 <structure> = <annotation_block>, <wsn>, "struct", <ws>, <s_type>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}';
