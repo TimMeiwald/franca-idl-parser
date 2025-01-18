@@ -7,7 +7,7 @@
 
 <uri_string> = <letter>+, ('.', <letter>+)*;
 <letter> Inline = ['A'..'Z']/['a'..'z'];
-<variable_str> Inline = (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9'])); # Common to most PLS #
+<variable_str> Inline = (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
 
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "<**", (!"**>", <ascii>)*, "**>";

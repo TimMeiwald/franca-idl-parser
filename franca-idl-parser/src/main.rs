@@ -1,6 +1,7 @@
-use ::franca_idl_parser::*;
+use franca_idl_parser::*;
 use clap::Parser;
 use std::{fs, path::PathBuf, process::exit};
+
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
