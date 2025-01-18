@@ -2,13 +2,9 @@ use crate::shared;
 use franca_idl_parser::{variable_str, annotation_block, BasicContext, Rules};
 
 // 	attribute Playlist currentPlaylist
-
 // 	attribute TrackId currentTrack
-	
 // 	attribute Duration remainingTrack
-	
 // 	attribute Duration remainingAll
-	
 // 	attribute RepeatMode mode
 
 #[test]

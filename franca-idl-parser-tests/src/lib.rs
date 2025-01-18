@@ -1,9 +1,9 @@
 mod test_annotations_and_blocks;
 mod test_attribute;
+mod test_version;
 mod test_variable_string;
 use franca_idl_parser::*;
 
-use franca_idl_parser::parser::*;
 use std::cell::RefCell;
 
 fn shared<'a>(
