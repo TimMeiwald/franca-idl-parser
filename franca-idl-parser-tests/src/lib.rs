@@ -1,4 +1,5 @@
 mod test_annotations_and_blocks;
+mod test_enumeration;
 mod test_attribute;
 mod test_version;
 mod test_variable_string;

@@ -30,8 +30,8 @@
 <s_interface> = <variable_str>;
 <declaration> = <s_type>, <ws_sole>+, <s_variable>, <wsn>*;
 <attribute> = <annotation_block>, <wsn>,"attribute", <ws_sole>+, <s_type>, <ws_sole>+, <s_variable>;
-<enumeration> = <annotation_block>, <wsn>, "enumeration", <ws>, <s_type>, <wsn>, '{', <enum_value>+,'}';
-<enum_value> = <s_variable>, <ws>, ('=', <integer>)?,'\n';
+<enumeration> = <annotation_block>, <wsn>, "enumeration", <ws>, <s_type>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
+<enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?,'\n';
 <structure> = <annotation_block>, <wsn>, "struct", <ws>, <s_type>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}';
 <broadcast> =  <wsn>, <annotation_block>, <wsn>, "broadcast", <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
 <method> = <wsn>, <annotation_block>, <wsn>, "method", <wsn>, '{', <wsn>, <t_in>?, <wsn>, <out>?, '}';

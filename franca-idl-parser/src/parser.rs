@@ -368,12 +368,17 @@ pub fn enumeration<T: Context>(parent: Key, context: &RefCell<T>, source: &Sourc
 	let closure_11 = _sequence(&closure_9, &closure_10);
 	let closure_12 = _terminal(b'{');
 	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = _var_name(Rules::enum_value, context, enum_value);
-	let closure_15 = _one_or_more(&closure_14);
-	let closure_16 = _sequence(&closure_13, &closure_15);
-	let closure_17 = _terminal(b'}');
+	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_15 = _var_name(Rules::enum_value, context, enum_value);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
 	let closure_18 = _sequence(&closure_16, &closure_17);
-	closure_18(parent, source, position)
+	let closure_19 = _subexpression(&closure_18);
+	let closure_20 = _one_or_more(&closure_19);
+	let closure_21 = _sequence(&closure_13, &closure_20);
+	let closure_22 = _terminal(b'}');
+	let closure_23 = _sequence(&closure_21, &closure_22);
+	closure_23(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn enum_value<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -382,14 +387,16 @@ pub fn enum_value<T: Context>(parent: Key, context: &RefCell<T>, source: &Source
 	let closure_2 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
 	let closure_3 = _sequence(&closure_1, &closure_2);
 	let closure_4 = _terminal(b'=');
-	let closure_5 = _var_name(Rules::integer, context, integer);
+	let closure_5 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
 	let closure_6 = _sequence(&closure_4, &closure_5);
-	let closure_7 = _subexpression(&closure_6);
-	let closure_8 = _optional(&closure_7);
-	let closure_9 = _sequence(&closure_3, &closure_8);
-	let closure_10 = _terminal(b'\n');
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	closure_11(parent, source, position)
+	let closure_7 = _var_name(Rules::integer, context, integer);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _subexpression(&closure_8);
+	let closure_10 = _optional(&closure_9);
+	let closure_11 = _sequence(&closure_3, &closure_10);
+	let closure_12 = _terminal(b'\n');
+	let closure_13 = _sequence(&closure_11, &closure_12);
+	closure_13(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn structure<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
