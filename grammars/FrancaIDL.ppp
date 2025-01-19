@@ -7,7 +7,7 @@
 
 <uri_string> = <letter>+, ('.', <letter>+)*;
 <letter> Inline = ['A'..'Z']/['a'..'z'];
-<variable_str> Inline = (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
+<variable_str> Inline = '^'?, (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
 
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "<**", (!"**>", <ascii>)*, "**>";
@@ -20,7 +20,7 @@
 
 <extends> = "extends", <wsn>, <s_type>;
 <interface> = <annotation_block>?, <wsn>, "interface", <wsn>, <s_interface>, <wsn>, <extends>?, <wsn>, '{', <wsn>, <interface_container>, <wsn>, '}', <wsn>;
-<interface_container> = <version>?, <wsn>, ((<method>/<broadcast>/<typedef>/<structure>/<attribute>/<enumeration>/<comment>/<multiline_comment>), <wsn>)*;
+<interface_container> = <version>?, <wsn>, ((<method>/<broadcast>/<typedef>/<explicit_array_def>/<structure>/<attribute>/<enumeration>/<comment>/<multiline_comment>), <wsn>)*;
 <version> = "version", <wsn>, '{', <wsn>, <major>, <wsn>, <minor>, <wsn>, '}';
 <integer> = ['0'..'9']+; #Could prevent leading zeros but whatever#
 <major> = "major", <ws>, <integer>;
@@ -39,8 +39,9 @@
 <enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?,'\n';
 <structure> = <annotation_block>?, <wsn>, "struct", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}', <wsn>;
 <broadcast> =  <annotation_block>?, <wsn>, "broadcast", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
-<method> = <annotation_block>?, <wsn>, "method", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <t_in>?, <wsn>, <out>?, <wsn> ,'}', <wsn>;
-<t_in> = <annotation_block>?, <wsn>, "in", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
+<method> = <annotation_block>?, <wsn>, "method", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <method_in>?, <wsn>, <out>?, <wsn> ,'}', <wsn>;
+<method_in> = <annotation_block>?, <wsn>, "in", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
 <out> = <annotation_block>?, <wsn>, "out", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
 <typedef> = <annotation_block>?, <wsn>, "typedef", <ws>, <s_type>, <ws>, "is", <ws>, <s_typeof>;
 <psm> = "WAAAAGH - Not Yet Implemented"; #Program State Machine#
+<explicit_array_def> = <annotation_block>?, <wsn>, "array", <wsn>, <s_variable>, <wsn>, "of", <wsn>, <s_type>, <wsn> ;# No idea why this exists or what it even means in an interface tbh#
