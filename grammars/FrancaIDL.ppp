@@ -11,31 +11,36 @@
 
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "<**", (!"**>", <ascii>)*, "**>";
-<comment> = "//", (!'\n', <ascii>)*;
+<comment> = <wsn>, "//", (!'\n', <ascii>)*, '\n';
 <annotation_block> = "<**", <wsn>, (!"**>", <annotation>, <wsn>)+, <wsn>, "**>";
 <annotation> = '@', <annotation_name>, <ws>, ':', <annotation_content>;
 <annotation_content> = (!'@', !"**>",<ascii>)*;
 <annotation_name> = <annotation_name_char>+;
 <annotation_name_char> Inline = <letter>/'-';
 
-<interface> = "interface", <wsn>, <s_interface>, <wsn>, '{', <wsn>, <interface_container>, <wsn>, '}';
-<interface_container> = <version>, <wsn>, ((<method>/<broadcast>/<typedef>/<structure>/<attribute>), <wsn>)+;
+<extends> = "extends", <wsn>, <s_type>;
+<interface> = <annotation_block>?, <wsn>, "interface", <wsn>, <s_interface>, <wsn>, <extends>?, <wsn>, '{', <wsn>, <interface_container>, <wsn>, '}', <wsn>;
+<interface_container> = <version>?, <wsn>, ((<method>/<broadcast>/<typedef>/<structure>/<attribute>/<enumeration>/<comment>/<multiline_comment>), <wsn>)*;
 <version> = "version", <wsn>, '{', <wsn>, <major>, <wsn>, <minor>, <wsn>, '}';
 <integer> = ['0'..'9']+; #Could prevent leading zeros but whatever#
 <major> = "major", <ws>, <integer>;
 <minor> = "minor", <ws>, <integer>;
 
-<s_type> = <variable_str>, ("[]")?;
+
+<s_type_array> = <variable_str>, ("[]");
+<s_type> = <variable_str>;
+
+<s_typeof> = <s_type_array>/<s_type>;
 <s_variable> = <variable_str>;
 <s_interface> = <variable_str>;
-<declaration> = <s_type>, <ws_sole>+, <s_variable>, <wsn>*;
-<attribute> = <annotation_block>, <wsn>,"attribute", <ws_sole>+, <s_type>, <ws_sole>+, <s_variable>;
-<enumeration> = <annotation_block>, <wsn>, "enumeration", <ws>, <s_type>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
+<declaration> = <annotation_block>?, <wsn>, <s_typeof>, <ws_sole>+, <s_variable>, <wsn>;
+<attribute> = <annotation_block>?, <wsn>,"attribute", <ws_sole>+, <s_typeof>, <ws_sole>+, <s_variable>;
+<enumeration> = <annotation_block>?, <wsn>, "enumeration", <ws>, <s_typeof>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
 <enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?,'\n';
-<structure> = <annotation_block>, <wsn>, "struct", <ws>, <s_type>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}';
-<broadcast> =  <wsn>, <annotation_block>, <wsn>, "broadcast", <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
-<method> = <wsn>, <annotation_block>, <wsn>, "method", <wsn>, '{', <wsn>, <t_in>?, <wsn>, <out>?, '}';
-<t_in> = <wsn>, "in", <wsn>, '{', <wsn>, <declaration>*,  <wsn>, '}', <wsn>;
-<out> = <wsn>, "out", <wsn>, '{', <wsn>, <declaration>*,  <wsn>, '}', <wsn>;
-<typedef> = <wsn>, <annotation_block>, <wsn>, "typedef", <ws>, <s_type>, <ws>, "is", <ws>, <s_type>;
+<structure> = <annotation_block>?, <wsn>, "struct", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}', <wsn>;
+<broadcast> =  <annotation_block>?, <wsn>, "broadcast", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
+<method> = <annotation_block>?, <wsn>, "method", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <t_in>?, <wsn>, <out>?, <wsn> ,'}', <wsn>;
+<t_in> = <annotation_block>?, <wsn>, "in", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
+<out> = <annotation_block>?, <wsn>, "out", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
+<typedef> = <annotation_block>?, <wsn>, "typedef", <ws>, <s_type>, <ws>, "is", <ws>, <s_typeof>;
 <psm> = "WAAAAGH - Not Yet Implemented"; #Program State Machine#

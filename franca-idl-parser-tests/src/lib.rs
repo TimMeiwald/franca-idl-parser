@@ -3,6 +3,11 @@ mod test_enumeration;
 mod test_attribute;
 mod test_version;
 mod test_variable_string;
+mod test_method;
+mod test_structure;
+mod test_broadcast;
+mod test_interface;
+mod test_comment;
 use franca_idl_parser::*;
 
 use std::cell::RefCell;

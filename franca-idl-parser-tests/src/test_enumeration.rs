@@ -26,3 +26,14 @@ fn test_enumeration_2() {
     let result = shared(src, enumeration::<BasicContext>, Rules::enumeration); 
     assert_eq!(result, (true, src.len() as u32));
 }
+
+#[test]
+fn test_enumeration_3() {
+    let src = r#"enumeration RepeatMode {
+		MODE_REPEAT_NONE
+		MODE_REPEAT_SINGLE
+		MODE_REPEAT_ALL
+	}"#;
+    let result = shared(src, enumeration::<BasicContext>, Rules::enumeration); 
+    assert_eq!(result, (true, src.len() as u32));
+}

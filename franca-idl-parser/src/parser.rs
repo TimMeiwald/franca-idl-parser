@@ -128,15 +128,19 @@ pub fn multiline_comment<T: Context>(parent: Key, context: &RefCell<T>, source: 
 } #[allow(dead_code)]
 pub fn comment<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = _string_terminal_opt_ascii(&[b'/',b'/']);
-	let closure_2 = _terminal(b'\n');
-	let closure_3 = _not_predicate(&closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| ascii(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _subexpression(&closure_5);
-	let closure_7 = _zero_or_more(&closure_6);
-	let closure_8 = _sequence(&closure_1, &closure_7);
-	closure_8(parent, source, position)
+	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_2 = _string_terminal_opt_ascii(&[b'/',b'/']);
+	let closure_3 = _sequence(&closure_1, &closure_2);
+	let closure_4 = _terminal(b'\n');
+	let closure_5 = _not_predicate(&closure_4);
+	let closure_6 = move |parent: Key, source: &Source, position: u32| ascii(parent, context, source, position);
+	let closure_7 = _sequence(&closure_5, &closure_6);
+	let closure_8 = _subexpression(&closure_7);
+	let closure_9 = _zero_or_more(&closure_8);
+	let closure_10 = _sequence(&closure_3, &closure_9);
+	let closure_11 = _terminal(b'\n');
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	closure_12(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn annotation_block<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -203,49 +207,78 @@ pub fn annotation_name_char<T: Context>(parent: Key, context: &RefCell<T>, sourc
 	closure_3(parent, source, position)
 
 } #[allow(dead_code)]
-pub fn interface<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+pub fn extends<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = _string_terminal_opt_ascii(&[b'i',b'n',b't',b'e',b'r',b'f',b'a',b'c',b'e']);
+	let closure_1 = _string_terminal_opt_ascii(&[b'e',b'x',b't',b'e',b'n',b'd',b's']);
 	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
 	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _var_name(Rules::s_interface, context, s_interface);
+	let closure_4 = _var_name(Rules::s_type, context, s_type);
 	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = _terminal(b'{');
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = _var_name(Rules::interface_container, context, interface_container);
-	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_15 = _sequence(&closure_13, &closure_14);
-	let closure_16 = _terminal(b'}');
+	closure_5(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn interface<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'i',b'n',b't',b'e',b'r',b'f',b'a',b'c',b'e']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_interface, context, s_interface);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _var_name(Rules::extends, context, extends);
+	let closure_14 = _optional(&closure_13);
+	let closure_15 = _sequence(&closure_12, &closure_14);
+	let closure_16 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
 	let closure_17 = _sequence(&closure_15, &closure_16);
-	closure_17(parent, source, position)
+	let closure_18 = _terminal(b'{');
+	let closure_19 = _sequence(&closure_17, &closure_18);
+	let closure_20 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_21 = _sequence(&closure_19, &closure_20);
+	let closure_22 = _var_name(Rules::interface_container, context, interface_container);
+	let closure_23 = _sequence(&closure_21, &closure_22);
+	let closure_24 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_25 = _sequence(&closure_23, &closure_24);
+	let closure_26 = _terminal(b'}');
+	let closure_27 = _sequence(&closure_25, &closure_26);
+	let closure_28 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_29 = _sequence(&closure_27, &closure_28);
+	closure_29(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn interface_container<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = _var_name(Rules::version, context, version);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _var_name(Rules::method, context, method);
-	let closure_5 = _var_name(Rules::broadcast, context, broadcast);
-	let closure_6 = _ordered_choice(&closure_4, &closure_5);
-	let closure_7 = _var_name(Rules::typedef, context, typedef);
-	let closure_8 = _ordered_choice(&closure_6, &closure_7);
-	let closure_9 = _var_name(Rules::structure, context, structure);
-	let closure_10 = _ordered_choice(&closure_8, &closure_9);
-	let closure_11 = _var_name(Rules::attribute, context, attribute);
-	let closure_12 = _ordered_choice(&closure_10, &closure_11);
-	let closure_13 = _subexpression(&closure_12);
-	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_15 = _sequence(&closure_13, &closure_14);
-	let closure_16 = _subexpression(&closure_15);
-	let closure_17 = _one_or_more(&closure_16);
-	let closure_18 = _sequence(&closure_3, &closure_17);
-	closure_18(parent, source, position)
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _var_name(Rules::method, context, method);
+	let closure_6 = _var_name(Rules::broadcast, context, broadcast);
+	let closure_7 = _ordered_choice(&closure_5, &closure_6);
+	let closure_8 = _var_name(Rules::typedef, context, typedef);
+	let closure_9 = _ordered_choice(&closure_7, &closure_8);
+	let closure_10 = _var_name(Rules::structure, context, structure);
+	let closure_11 = _ordered_choice(&closure_9, &closure_10);
+	let closure_12 = _var_name(Rules::attribute, context, attribute);
+	let closure_13 = _ordered_choice(&closure_11, &closure_12);
+	let closure_14 = _var_name(Rules::enumeration, context, enumeration);
+	let closure_15 = _ordered_choice(&closure_13, &closure_14);
+	let closure_16 = _var_name(Rules::comment, context, comment);
+	let closure_17 = _ordered_choice(&closure_15, &closure_16);
+	let closure_18 = _var_name(Rules::multiline_comment, context, multiline_comment);
+	let closure_19 = _ordered_choice(&closure_17, &closure_18);
+	let closure_20 = _subexpression(&closure_19);
+	let closure_21 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_22 = _sequence(&closure_20, &closure_21);
+	let closure_23 = _subexpression(&closure_22);
+	let closure_24 = _zero_or_more(&closure_23);
+	let closure_25 = _sequence(&closure_4, &closure_24);
+	closure_25(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn version<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -297,14 +330,27 @@ pub fn minor<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, pos
 	closure_5(parent, source, position)
 
 } #[allow(dead_code)]
-pub fn s_type<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+pub fn s_type_array<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = move |parent: Key, source: &Source, position: u32| variable_str(parent, context, source, position);
 	let closure_2 = _string_terminal_opt_ascii(&[b'[',b']']);
 	let closure_3 = _subexpression(&closure_2);
-	let closure_4 = _optional(&closure_3);
-	let closure_5 = _sequence(&closure_1, &closure_4);
-	closure_5(parent, source, position)
+	let closure_4 = _sequence(&closure_1, &closure_3);
+	closure_4(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn s_type<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = move |parent: Key, source: &Source, position: u32| variable_str(parent, context, source, position);
+	closure_1(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn s_typeof<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::s_type_array, context, s_type_array);
+	let closure_2 = _var_name(Rules::s_type, context, s_type);
+	let closure_3 = _ordered_choice(&closure_1, &closure_2);
+	closure_3(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn s_variable<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -321,64 +367,70 @@ pub fn s_interface<T: Context>(parent: Key, context: &RefCell<T>, source: &Sourc
 } #[allow(dead_code)]
 pub fn declaration<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = _var_name(Rules::s_type, context, s_type);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
-	let closure_3 = _one_or_more(&closure_2);
-	let closure_4 = _sequence(&closure_1, &closure_3);
-	let closure_5 = _var_name(Rules::s_variable, context, s_variable);
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _var_name(Rules::s_typeof, context, s_typeof);
 	let closure_6 = _sequence(&closure_4, &closure_5);
-	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_8 = _zero_or_more(&closure_7);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
+	let closure_8 = _one_or_more(&closure_7);
 	let closure_9 = _sequence(&closure_6, &closure_8);
-	closure_9(parent, source, position)
+	let closure_10 = _var_name(Rules::s_variable, context, s_variable);
+	let closure_11 = _sequence(&closure_9, &closure_10);
+	let closure_12 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_13 = _sequence(&closure_11, &closure_12);
+	closure_13(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn attribute<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _string_terminal_opt_ascii(&[b'a',b't',b't',b'r',b'i',b'b',b'u',b't',b'e']);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
-	let closure_7 = _one_or_more(&closure_6);
-	let closure_8 = _sequence(&closure_5, &closure_7);
-	let closure_9 = _var_name(Rules::s_type, context, s_type);
-	let closure_10 = _sequence(&closure_8, &closure_9);
-	let closure_11 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
-	let closure_12 = _one_or_more(&closure_11);
-	let closure_13 = _sequence(&closure_10, &closure_12);
-	let closure_14 = _var_name(Rules::s_variable, context, s_variable);
-	let closure_15 = _sequence(&closure_13, &closure_14);
-	closure_15(parent, source, position)
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'a',b't',b't',b'r',b'i',b'b',b'u',b't',b'e']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
+	let closure_8 = _one_or_more(&closure_7);
+	let closure_9 = _sequence(&closure_6, &closure_8);
+	let closure_10 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_11 = _sequence(&closure_9, &closure_10);
+	let closure_12 = move |parent: Key, source: &Source, position: u32| ws_sole(parent, context, source, position);
+	let closure_13 = _one_or_more(&closure_12);
+	let closure_14 = _sequence(&closure_11, &closure_13);
+	let closure_15 = _var_name(Rules::s_variable, context, s_variable);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	closure_16(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn enumeration<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _string_terminal_opt_ascii(&[b'e',b'n',b'u',b'm',b'e',b'r',b'a',b't',b'i',b'o',b'n']);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = _var_name(Rules::s_type, context, s_type);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = _terminal(b'{');
-	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_15 = _var_name(Rules::enum_value, context, enum_value);
-	let closure_16 = _sequence(&closure_14, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
-	let closure_19 = _subexpression(&closure_18);
-	let closure_20 = _one_or_more(&closure_19);
-	let closure_21 = _sequence(&closure_13, &closure_20);
-	let closure_22 = _terminal(b'}');
-	let closure_23 = _sequence(&closure_21, &closure_22);
-	closure_23(parent, source, position)
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'e',b'n',b'u',b'm',b'e',b'r',b'a',b't',b'i',b'o',b'n']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _terminal(b'{');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _var_name(Rules::enum_value, context, enum_value);
+	let closure_17 = _sequence(&closure_15, &closure_16);
+	let closure_18 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_19 = _sequence(&closure_17, &closure_18);
+	let closure_20 = _subexpression(&closure_19);
+	let closure_21 = _one_or_more(&closure_20);
+	let closure_22 = _sequence(&closure_14, &closure_21);
+	let closure_23 = _terminal(b'}');
+	let closure_24 = _sequence(&closure_22, &closure_23);
+	closure_24(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn enum_value<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -402,51 +454,119 @@ pub fn enum_value<T: Context>(parent: Key, context: &RefCell<T>, source: &Source
 pub fn structure<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _string_terminal_opt_ascii(&[b's',b't',b'r',b'u',b'c',b't']);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = _var_name(Rules::s_type, context, s_type);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = _terminal(b'{');
-	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_15 = _var_name(Rules::declaration, context, declaration);
-	let closure_16 = _sequence(&closure_14, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
-	let closure_19 = _subexpression(&closure_18);
-	let closure_20 = _one_or_more(&closure_19);
-	let closure_21 = _sequence(&closure_13, &closure_20);
-	let closure_22 = _terminal(b'}');
-	let closure_23 = _sequence(&closure_21, &closure_22);
-	closure_23(parent, source, position)
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b's',b't',b'r',b'u',b'c',b't']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _terminal(b'{');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _var_name(Rules::declaration, context, declaration);
+	let closure_17 = _sequence(&closure_15, &closure_16);
+	let closure_18 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_19 = _sequence(&closure_17, &closure_18);
+	let closure_20 = _subexpression(&closure_19);
+	let closure_21 = _one_or_more(&closure_20);
+	let closure_22 = _sequence(&closure_14, &closure_21);
+	let closure_23 = _terminal(b'}');
+	let closure_24 = _sequence(&closure_22, &closure_23);
+	let closure_25 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_26 = _sequence(&closure_24, &closure_25);
+	closure_26(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn broadcast<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_2 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _string_terminal_opt_ascii(&[b'b',b'r',b'o',b'a',b'd',b'c',b'a',b's',b't']);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _terminal(b'{');
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'b',b'r',b'o',b'a',b'd',b'c',b'a',b's',b't']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _terminal(b'{');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	let closure_17 = _var_name(Rules::out, context, out);
+	let closure_18 = _optional(&closure_17);
+	let closure_19 = _sequence(&closure_16, &closure_18);
+	let closure_20 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_21 = _sequence(&closure_19, &closure_20);
+	let closure_22 = _terminal(b'}');
+	let closure_23 = _sequence(&closure_21, &closure_22);
+	let closure_24 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_25 = _sequence(&closure_23, &closure_24);
+	closure_25(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn method<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'm',b'e',b't',b'h',b'o',b'd']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _terminal(b'{');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	let closure_17 = _var_name(Rules::t_in, context, t_in);
+	let closure_18 = _optional(&closure_17);
+	let closure_19 = _sequence(&closure_16, &closure_18);
+	let closure_20 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_21 = _sequence(&closure_19, &closure_20);
+	let closure_22 = _var_name(Rules::out, context, out);
+	let closure_23 = _optional(&closure_22);
+	let closure_24 = _sequence(&closure_21, &closure_23);
+	let closure_25 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_26 = _sequence(&closure_24, &closure_25);
+	let closure_27 = _terminal(b'}');
+	let closure_28 = _sequence(&closure_26, &closure_27);
+	let closure_29 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_30 = _sequence(&closure_28, &closure_29);
+	closure_30(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn t_in<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'i',b'n']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _terminal(b'{');
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _var_name(Rules::declaration, context, declaration);
 	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = _var_name(Rules::out, context, out);
-	let closure_15 = _optional(&closure_14);
-	let closure_16 = _sequence(&closure_13, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
+	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_15 = _sequence(&closure_13, &closure_14);
+	let closure_16 = _subexpression(&closure_15);
+	let closure_17 = _one_or_more(&closure_16);
+	let closure_18 = _sequence(&closure_10, &closure_17);
 	let closure_19 = _terminal(b'}');
 	let closure_20 = _sequence(&closure_18, &closure_19);
 	let closure_21 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
@@ -454,102 +574,54 @@ pub fn broadcast<T: Context>(parent: Key, context: &RefCell<T>, source: &Source,
 	closure_22(parent, source, position)
 
 } #[allow(dead_code)]
-pub fn method<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
-
-	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_2 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _string_terminal_opt_ascii(&[b'm',b'e',b't',b'h',b'o',b'd']);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _terminal(b'{');
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = _var_name(Rules::t_in, context, t_in);
-	let closure_15 = _optional(&closure_14);
-	let closure_16 = _sequence(&closure_13, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
-	let closure_19 = _var_name(Rules::out, context, out);
-	let closure_20 = _optional(&closure_19);
-	let closure_21 = _sequence(&closure_18, &closure_20);
-	let closure_22 = _terminal(b'}');
-	let closure_23 = _sequence(&closure_21, &closure_22);
-	closure_23(parent, source, position)
-
-} #[allow(dead_code)]
-pub fn t_in<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
-
-	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_2 = _string_terminal_opt_ascii(&[b'i',b'n']);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _terminal(b'{');
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _var_name(Rules::declaration, context, declaration);
-	let closure_11 = _zero_or_more(&closure_10);
-	let closure_12 = _sequence(&closure_9, &closure_11);
-	let closure_13 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_14 = _sequence(&closure_12, &closure_13);
-	let closure_15 = _terminal(b'}');
-	let closure_16 = _sequence(&closure_14, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
-	closure_18(parent, source, position)
-
-} #[allow(dead_code)]
 pub fn out<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_2 = _string_terminal_opt_ascii(&[b'o',b'u',b't']);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _terminal(b'{');
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _var_name(Rules::declaration, context, declaration);
-	let closure_11 = _zero_or_more(&closure_10);
-	let closure_12 = _sequence(&closure_9, &closure_11);
-	let closure_13 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_14 = _sequence(&closure_12, &closure_13);
-	let closure_15 = _terminal(b'}');
-	let closure_16 = _sequence(&closure_14, &closure_15);
-	let closure_17 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_18 = _sequence(&closure_16, &closure_17);
-	closure_18(parent, source, position)
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b'o',b'u',b't']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _terminal(b'{');
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _var_name(Rules::declaration, context, declaration);
+	let closure_13 = _sequence(&closure_11, &closure_12);
+	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_15 = _sequence(&closure_13, &closure_14);
+	let closure_16 = _subexpression(&closure_15);
+	let closure_17 = _one_or_more(&closure_16);
+	let closure_18 = _sequence(&closure_10, &closure_17);
+	let closure_19 = _terminal(b'}');
+	let closure_20 = _sequence(&closure_18, &closure_19);
+	let closure_21 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_22 = _sequence(&closure_20, &closure_21);
+	closure_22(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn typedef<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_2 = _var_name(Rules::annotation_block, context, annotation_block);
-	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _string_terminal_opt_ascii(&[b't',b'y',b'p',b'e',b'd',b'e',b'f']);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
-	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _var_name(Rules::s_type, context, s_type);
-	let closure_11 = _sequence(&closure_9, &closure_10);
-	let closure_12 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
-	let closure_13 = _sequence(&closure_11, &closure_12);
-	let closure_14 = _string_terminal_opt_ascii(&[b'i',b's']);
-	let closure_15 = _sequence(&closure_13, &closure_14);
-	let closure_16 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
-	let closure_17 = _sequence(&closure_15, &closure_16);
-	let closure_18 = _var_name(Rules::s_type, context, s_type);
-	let closure_19 = _sequence(&closure_17, &closure_18);
-	closure_19(parent, source, position)
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b't',b'y',b'p',b'e',b'd',b'e',b'f']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_type, context, s_type);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _string_terminal_opt_ascii(&[b'i',b's']);
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	let closure_17 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_18 = _sequence(&closure_16, &closure_17);
+	closure_18(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn psm<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
