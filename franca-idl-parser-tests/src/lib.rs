@@ -8,6 +8,7 @@ mod test_structure;
 mod test_broadcast;
 mod test_interface;
 mod test_comment;
+mod test_grammar;
 use franca_idl_parser::*;
 
 use std::cell::RefCell;

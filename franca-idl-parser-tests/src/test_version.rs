@@ -20,3 +20,4 @@ fn test_version_2() {
     let result = shared(src, version::<BasicContext>, Rules::version); 
     assert_eq!(result, (true, src.len() as u32));
 }
+

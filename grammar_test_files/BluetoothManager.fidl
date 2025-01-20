@@ -59,7 +59,7 @@ interface BluetoothManager {
 		in {
 			String pattern
 			String action
-		}2
+		}
 	}
 
 	method GetBluetoothStatus {
