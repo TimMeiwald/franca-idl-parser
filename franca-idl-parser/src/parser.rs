@@ -6,14 +6,24 @@ use std::cell::RefCell;
 #[allow(dead_code)]
 pub fn grammar<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
-	let closure_1 = _var_name(Rules::package, context, package);
-	let closure_2 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_1 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_2 = _var_name(Rules::package, context, package);
 	let closure_3 = _sequence(&closure_1, &closure_2);
-	let closure_4 = _var_name(Rules::interface, context, interface);
+	let closure_4 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
 	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_7 = _sequence(&closure_5, &closure_6);
-	closure_7(parent, source, position)
+	let closure_6 = _var_name(Rules::import, context, import);
+	let closure_7 = _zero_or_more(&closure_6);
+	let closure_8 = _sequence(&closure_5, &closure_7);
+	let closure_9 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = _var_name(Rules::interface, context, interface);
+	let closure_12 = _var_name(Rules::type_collection, context, type_collection);
+	let closure_13 = _ordered_choice(&closure_11, &closure_12);
+	let closure_14 = _subexpression(&closure_13);
+	let closure_15 = _sequence(&closure_10, &closure_14);
+	let closure_16 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_17 = _sequence(&closure_15, &closure_16);
+	closure_17(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn ws_sole<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -74,6 +84,15 @@ pub fn package<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, p
 	closure_9(parent, source, position)
 
 } #[allow(dead_code)]
+pub fn imported_uri_string<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::uri_string, context, uri_string);
+	let closure_2 = _string_terminal_opt_ascii(&[b'.',b'*']);
+	let closure_3 = _optional(&closure_2);
+	let closure_4 = _sequence(&closure_1, &closure_3);
+	closure_4(parent, source, position)
+
+} #[allow(dead_code)]
 pub fn uri_string<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = move |parent: Key, source: &Source, position: u32| letter(parent, context, source, position);
@@ -119,6 +138,47 @@ pub fn variable_str<T: Context>(parent: Key, context: &RefCell<T>, source: &Sour
 	let closure_19 = _zero_or_more(&closure_18);
 	let closure_20 = _sequence(&closure_9, &closure_19);
 	closure_20(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn import_namespace<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _string_terminal_opt_ascii(&[b'i',b'm',b'p',b'o',b'r',b't']);
+	let closure_2 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_3 = _sequence(&closure_1, &closure_2);
+	let closure_4 = _var_name(Rules::imported_uri_string, context, imported_uri_string);
+	let closure_5 = _sequence(&closure_3, &closure_4);
+	let closure_6 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_7 = _sequence(&closure_5, &closure_6);
+	closure_7(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn import_model<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _string_terminal_opt_ascii(&[b'i',b'm',b'p',b'o',b'r',b't',b' ',b'm',b'o',b'd',b'e',b'l']);
+	let closure_2 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_3 = _sequence(&closure_1, &closure_2);
+	let closure_4 = _terminal(b'"');
+	let closure_5 = _sequence(&closure_3, &closure_4);
+	let closure_6 = _terminal(b'"');
+	let closure_7 = _not_predicate(&closure_6);
+	let closure_8 = move |parent: Key, source: &Source, position: u32| ascii(parent, context, source, position);
+	let closure_9 = _sequence(&closure_7, &closure_8);
+	let closure_10 = _subexpression(&closure_9);
+	let closure_11 = _zero_or_more(&closure_10);
+	let closure_12 = _sequence(&closure_5, &closure_11);
+	let closure_13 = _terminal(b'"');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _sequence(&closure_14, &closure_15);
+	closure_16(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn import<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::import_model, context, import_model);
+	let closure_2 = _var_name(Rules::import_namespace, context, import_namespace);
+	let closure_3 = _ordered_choice(&closure_1, &closure_2);
+	closure_3(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn ascii<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -382,6 +442,44 @@ pub fn s_interface<T: Context>(parent: Key, context: &RefCell<T>, source: &Sourc
 
 	let closure_1 = move |parent: Key, source: &Source, position: u32| variable_str(parent, context, source, position);
 	closure_1(parent, source, position)
+
+} #[allow(dead_code)]
+pub fn type_collection<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _var_name(Rules::annotation_block, context, annotation_block);
+	let closure_2 = _optional(&closure_1);
+	let closure_3 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_4 = _sequence(&closure_2, &closure_3);
+	let closure_5 = _string_terminal_opt_ascii(&[b't',b'y',b'p',b'e',b'C',b'o',b'l',b'l',b'e',b'c',b't',b'i',b'o',b'n']);
+	let closure_6 = _sequence(&closure_4, &closure_5);
+	let closure_7 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_8 = _sequence(&closure_6, &closure_7);
+	let closure_9 = _var_name(Rules::s_typeof, context, s_typeof);
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	let closure_11 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_12 = _sequence(&closure_10, &closure_11);
+	let closure_13 = _terminal(b'{');
+	let closure_14 = _sequence(&closure_12, &closure_13);
+	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_16 = _var_name(Rules::explicit_array_def, context, explicit_array_def);
+	let closure_17 = _var_name(Rules::typedef, context, typedef);
+	let closure_18 = _ordered_choice(&closure_16, &closure_17);
+	let closure_19 = _var_name(Rules::structure, context, structure);
+	let closure_20 = _ordered_choice(&closure_18, &closure_19);
+	let closure_21 = _var_name(Rules::enumeration, context, enumeration);
+	let closure_22 = _ordered_choice(&closure_20, &closure_21);
+	let closure_23 = _subexpression(&closure_22);
+	let closure_24 = _sequence(&closure_15, &closure_23);
+	let closure_25 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_26 = _sequence(&closure_24, &closure_25);
+	let closure_27 = _subexpression(&closure_26);
+	let closure_28 = _one_or_more(&closure_27);
+	let closure_29 = _sequence(&closure_14, &closure_28);
+	let closure_30 = _terminal(b'}');
+	let closure_31 = _sequence(&closure_29, &closure_30);
+	let closure_32 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_33 = _sequence(&closure_31, &closure_32);
+	closure_33(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn declaration<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {

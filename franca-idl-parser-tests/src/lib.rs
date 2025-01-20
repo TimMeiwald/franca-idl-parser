@@ -31,7 +31,7 @@ fn shared<'a>(
     println!("Result: {:?}", result);
     //context.borrow().print_cache();
     //context.borrow().print_publisher();
-    context.borrow().print_node(Key(0));
+    //context.borrow().print_node(Key(0));
 
     result
 }

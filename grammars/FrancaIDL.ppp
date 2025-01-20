@@ -1,14 +1,18 @@
-<Grammar> = <package>, <wsn>, <interface>, <wsn>;
+<Grammar> = <wsn>, <package>, <wsn>, <import>*, <wsn>, (<interface>/<type_collection>), <wsn>;
 <ws_sole> Inline = <multiline_comment>/<comment>/' '/'\t'/'\r';
 <ws> Inline = <ws_sole>*;
 <wsn_sole> Inline = <multiline_comment>/<comment>/' '/'\t'/'\r'/'\n';
 <wsn> Inline = <wsn_sole>*;
 <package> = "package", <ws>, <uri_string>, <ws>, '\n'; #Describes the package import#
 
+<imported_uri_string> = <uri_string>, ".*"?;
 <uri_string> = <letter>+, ('.', <letter>+)*;
 <letter> Inline = ['A'..'Z']/['a'..'z'];
 <variable_str> Inline = '^'?, (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
 
+<import_namespace> = "import" , <ws>, <imported_uri_string>, <wsn>;
+<import_model> = "import model", <ws>, '"', (!'"', <ascii>)*,'"',<wsn>;
+<import> = <import_model>/<import_namespace>;
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "/*", (!"*/", <ascii>)*, "*/";
 <comment> = "//", (!'\n', <ascii>)*, '\n';
@@ -33,6 +37,8 @@
 <s_typeof> = <s_type_array>/<s_type>;
 <s_variable> = '_'?, <variable_str>;
 <s_interface> = <variable_str>;
+
+<type_collection> = <annotation_block>?, <wsn>, "typeCollection", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, (<explicit_array_def>/<typedef>/<structure>/<enumeration>), <wsn>)+, '}', <wsn>;
 <declaration> = <annotation_block>?, <wsn>, <s_typeof>, <ws_sole>+, <s_variable>, <wsn>;
 <attribute> = <annotation_block>?, <wsn>,"attribute", <ws_sole>+, <s_typeof>, <ws_sole>+, <s_variable>;
 <enumeration> = <annotation_block>?, <wsn>, "enumeration", <ws>, <s_typeof>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
