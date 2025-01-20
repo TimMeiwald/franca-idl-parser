@@ -140,6 +140,21 @@ pub fn variable_str<T: Context>(parent: Key, context: &RefCell<T>, source: &Sour
 	closure_20(parent, source, position)
 
 } #[allow(dead_code)]
+pub fn file_name<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
+
+	let closure_1 = _terminal(b'"');
+	let closure_2 = _terminal(b'"');
+	let closure_3 = _not_predicate(&closure_2);
+	let closure_4 = move |parent: Key, source: &Source, position: u32| ascii(parent, context, source, position);
+	let closure_5 = _sequence(&closure_3, &closure_4);
+	let closure_6 = _subexpression(&closure_5);
+	let closure_7 = _zero_or_more(&closure_6);
+	let closure_8 = _sequence(&closure_1, &closure_7);
+	let closure_9 = _terminal(b'"');
+	let closure_10 = _sequence(&closure_8, &closure_9);
+	closure_10(parent, source, position)
+
+} #[allow(dead_code)]
 pub fn import_namespace<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
 
 	let closure_1 = _string_terminal_opt_ascii(&[b'i',b'm',b'p',b'o',b'r',b't']);
@@ -147,9 +162,17 @@ pub fn import_namespace<T: Context>(parent: Key, context: &RefCell<T>, source: &
 	let closure_3 = _sequence(&closure_1, &closure_2);
 	let closure_4 = _var_name(Rules::imported_uri_string, context, imported_uri_string);
 	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_6 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
 	let closure_7 = _sequence(&closure_5, &closure_6);
-	closure_7(parent, source, position)
+	let closure_8 = _string_terminal_opt_ascii(&[b'f',b'r',b'o',b'm']);
+	let closure_9 = _sequence(&closure_7, &closure_8);
+	let closure_10 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
+	let closure_11 = _sequence(&closure_9, &closure_10);
+	let closure_12 = _var_name(Rules::file_name, context, file_name);
+	let closure_13 = _sequence(&closure_11, &closure_12);
+	let closure_14 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
+	let closure_15 = _sequence(&closure_13, &closure_14);
+	closure_15(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn import_model<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {
@@ -159,18 +182,11 @@ pub fn import_model<T: Context>(parent: Key, context: &RefCell<T>, source: &Sour
 	let closure_3 = _sequence(&closure_1, &closure_2);
 	let closure_4 = _terminal(b'"');
 	let closure_5 = _sequence(&closure_3, &closure_4);
-	let closure_6 = _terminal(b'"');
-	let closure_7 = _not_predicate(&closure_6);
-	let closure_8 = move |parent: Key, source: &Source, position: u32| ascii(parent, context, source, position);
+	let closure_6 = _var_name(Rules::file_name, context, file_name);
+	let closure_7 = _sequence(&closure_5, &closure_6);
+	let closure_8 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
 	let closure_9 = _sequence(&closure_7, &closure_8);
-	let closure_10 = _subexpression(&closure_9);
-	let closure_11 = _zero_or_more(&closure_10);
-	let closure_12 = _sequence(&closure_5, &closure_11);
-	let closure_13 = _terminal(b'"');
-	let closure_14 = _sequence(&closure_12, &closure_13);
-	let closure_15 = move |parent: Key, source: &Source, position: u32| wsn(parent, context, source, position);
-	let closure_16 = _sequence(&closure_14, &closure_15);
-	closure_16(parent, source, position)
+	closure_9(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn import<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {

@@ -10,8 +10,9 @@
 <letter> Inline = ['A'..'Z']/['a'..'z'];
 <variable_str> Inline = '^'?, (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
 
-<import_namespace> = "import" , <ws>, <imported_uri_string>, <wsn>;
-<import_model> = "import model", <ws>, '"', (!'"', <ascii>)*,'"',<wsn>;
+<file_name> = '"', (!'"', <ascii>)*,'"';
+<import_namespace> = "import" , <ws>, <imported_uri_string>, <ws>, "from", <ws>, <file_name>, <wsn>;
+<import_model> = "import model", <ws>, '"', <file_name> ,<wsn>;
 <import> = <import_model>/<import_namespace>;
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "/*", (!"*/", <ascii>)*, "*/";
