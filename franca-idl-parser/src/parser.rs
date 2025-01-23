@@ -579,9 +579,14 @@ pub fn enum_value<T: Context>(parent: Key, context: &RefCell<T>, source: &Source
 	let closure_9 = _subexpression(&closure_8);
 	let closure_10 = _optional(&closure_9);
 	let closure_11 = _sequence(&closure_3, &closure_10);
-	let closure_12 = _terminal(b'\n');
+	let closure_12 = move |parent: Key, source: &Source, position: u32| ws(parent, context, source, position);
 	let closure_13 = _sequence(&closure_11, &closure_12);
-	closure_13(parent, source, position)
+	let closure_14 = _terminal(b',');
+	let closure_15 = _optional(&closure_14);
+	let closure_16 = _sequence(&closure_13, &closure_15);
+	let closure_17 = _terminal(b'\n');
+	let closure_18 = _sequence(&closure_16, &closure_17);
+	closure_18(parent, source, position)
 
 } #[allow(dead_code)]
 pub fn structure<T: Context>(parent: Key, context: &RefCell<T>, source: &Source, position: u32) -> (bool, u32) {

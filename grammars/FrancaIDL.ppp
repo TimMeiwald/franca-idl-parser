@@ -43,7 +43,7 @@
 <declaration> = <annotation_block>?, <wsn>, <s_typeof>, <ws_sole>+, <s_variable>, <wsn>;
 <attribute> = <annotation_block>?, <wsn>,"attribute", <ws_sole>+, <s_typeof>, <ws_sole>+, <s_variable>;
 <enumeration> = <annotation_block>?, <wsn>, "enumeration", <ws>, <s_typeof>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
-<enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?,'\n';
+<enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?, <ws>,','?,'\n';
 <structure> = <annotation_block>?, <wsn>, "struct", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}', <wsn>;
 <broadcast> =  <annotation_block>?, <wsn>, "broadcast", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
 <method> = <annotation_block>?, <wsn>, "method", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <method_in>?, <wsn>, <out>?, <wsn> ,'}', <wsn>;
