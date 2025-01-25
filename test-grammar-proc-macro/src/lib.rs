@@ -42,13 +42,7 @@ pub fn test_grammar_files_in_dir(input: proc_macro::TokenStream) -> proc_macro::
         let filepath = filepath
             .to_str()
             .expect("Should be able to turn into str");
-        println!("{:?}", filepath);       
-
-
-
         let filepath = syn::LitStr::new(filepath, Span::call_site());
-        println!("{:?}", constant_directory);
-        println!("{:?}", filepath);
         let stream = quote::quote!(
             #[test]
             fn #test_ident(){
