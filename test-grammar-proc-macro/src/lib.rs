@@ -49,7 +49,7 @@ pub fn test_grammar_files_in_dir(input: proc_macro::TokenStream) -> proc_macro::
         let filepath = syn::LitStr::new(filepath, Span::call_site());
         println!("{:?}", constant_directory);
         println!("{:?}", filepath);
-        return_stream = quote::quote!(
+        let stream = quote::quote!(
             #[test]
             fn #test_ident(){
                 let file_path = #filepath;
@@ -63,8 +63,7 @@ pub fn test_grammar_files_in_dir(input: proc_macro::TokenStream) -> proc_macro::
                 let result = shared(&src, grammar::<BasicContext>, Rules::Grammar);
                 assert_eq!(result, (true, src.len() as u32))
         });
-        println!("{}", return_stream);
-        return return_stream.into();
+        return_stream.extend(stream);
     }
     
     return_stream.into()
