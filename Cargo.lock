@@ -118,6 +118,7 @@ name = "franca-idl-parser-tests"
 version = "0.1.0"
 dependencies = [
  "franca-idl-parser",
+ "test-grammar-proc-macro",
 ]
 
 [[package]]
@@ -254,6 +255,11 @@ dependencies = [
 [[package]]
 name = "test-grammar-proc-macro"
 version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "unicode-ident"

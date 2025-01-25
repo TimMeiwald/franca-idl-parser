@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["franca-idl-parser", "franca-idl-parser-tests", "test_grammar_proc_macro"]
+members = ["franca-idl-parser", "franca-idl-parser-tests", "test-grammar-proc-macro"]
 
 [profile.dev]
 panic = "unwind"

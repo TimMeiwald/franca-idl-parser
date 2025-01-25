@@ -1,3 +1,4 @@
+use test_grammar_proc_macro::test_grammar_files_in_dir;
 use std::{
     fs::{self, File},
     io::Read,
@@ -91,7 +92,7 @@ fn test_grammar_5() {
 
 #[test]
 fn test_grammar_6() {
-    let file_path = "../grammar_test_files/Speller.fidl";
+    let file_path = "../grammar_test_files/speller.fidl";
     let src = fs::read_to_string(file_path);
     let src = match src {
         Err(err) => {
@@ -133,3 +134,4 @@ fn test_grammar_all_test() {
    
 }
 
+test_grammar_files_in_dir!("../grammar_test_files/");

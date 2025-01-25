@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 franca-idl-parser = { path = "../franca-idl-parser" }
+test-grammar-proc-macro = {path = "../test-grammar-proc-macro"}
