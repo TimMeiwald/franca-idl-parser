@@ -55,6 +55,9 @@ pub fn test_grammar_files_in_dir(input: proc_macro::TokenStream) -> proc_macro::
                     Ok(src) => src,
                 };
                 let result = shared(&src, grammar::<BasicContext>, Rules::Grammar);
+                if result.0 != true{
+                    println!("Result is {:?}", result)
+                }
                 assert_eq!(result, (true, src.len() as u32))
         });
         return_stream.extend(stream);

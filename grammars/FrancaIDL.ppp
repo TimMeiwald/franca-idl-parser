@@ -1,18 +1,18 @@
-<Grammar> = <wsn>, <package>, <wsn>, <import>*, <wsn>, (<interface>/<type_collection>), <wsn>;
+<Grammar> = <wsn>, <package>, <wsn>, <import>*, <wsn>, (<interface>/<type_collection>)*, <wsn>;
 <ws_sole> Inline = <multiline_comment>/<comment>/' '/'\t'/'\r';
 <ws> Inline = <ws_sole>*;
 <wsn_sole> Inline = <multiline_comment>/<comment>/' '/'\t'/'\r'/'\n';
 <wsn> Inline = <wsn_sole>*;
 <package> = "package", <ws>, <uri_string>, <ws>, '\n'; #Describes the package import#
-
+<num> = ['0'..'9'];
 <imported_uri_string> = <uri_string>, ".*"?;
-<uri_string> = <letter>+, ('.', <letter>+)*;
+<uri_string> = (<letter>/<num>/'-'/'_')+, ('.', (<letter>/<num>/'-'/'_')+)*;
 <letter> Inline = ['A'..'Z']/['a'..'z'];
 <variable_str> Inline = '^'?, (['a'..'z']/['A'..'Z']/'_'), ((['a'..'z']/['A'..'Z']/'_'/['0'..'9']))*; # Common to most PLS #
 
 <file_name> = '"', (!'"', <ascii>)*,'"';
 <import_namespace> = "import" , <ws>, <imported_uri_string>, <ws>, "from", <ws>, <file_name>, <wsn>;
-<import_model> = "import model", <ws>, '"', <file_name> ,<wsn>;
+<import_model> = "import", <ws>,  "model", <ws>, <file_name> ,<wsn>;
 <import> = <import_model>/<import_namespace>;
 <ascii> Inline = [0x00..0xFF];
 <multiline_comment> = "/*", (!"*/", <ascii>)*, "*/";
@@ -24,31 +24,58 @@
 <annotation_name_char> Inline = <letter>/'-';
 
 <extends> = "extends", <wsn>, <s_type>;
-<interface> = <annotation_block>?, <wsn>, "interface", <wsn>, <s_interface>, <wsn>, <extends>?, <wsn>, '{', <wsn>, <interface_container>, <wsn>, '}', <wsn>;
-<interface_container> = <version>?, <wsn>, ((<method>/<broadcast>/<typedef>/<explicit_array_def>/<structure>/<attribute>/<enumeration>/<comment>/<multiline_comment>), <wsn>)*;
+<interface> =   <annotation_block>?, <wsn>, "interface", <wsn>, 
+                <s_interface>, <wsn>, 
+                <extends>?, <wsn>, 
+                '{', <wsn>, 
+                <interface_container>, 
+                <wsn>, '}', <wsn>;
+<interface_container> = <version>?, <wsn>, ((<method>/<broadcast>/<typedef>/<explicit_array_def>/<structure>/<attribute>/<enumeration>/<map>/<union>/<comment>/<multiline_comment>), <wsn>)*;
 <version> = "version", <wsn>, '{', <wsn>, <major>, <wsn>, <minor>, <wsn>, '}';
 <integer> = ['0'..'9']+; #Could prevent leading zeros but whatever#
 <major> = "major", <ws>, <integer>;
 <minor> = "minor", <ws>, <integer>;
 
-
-<s_type_array> = <variable_str>, ("[]");
-<s_type> = <variable_str>;
-
-<s_typeof> = <s_type_array>/<s_type>;
-<s_variable> = '_'?, <variable_str>;
+<minInteger> = "maxInt";
+<maxInteger> = "minInt";
+<integer_range> = ('(',<ws>,(<integer>/<minInteger>/<maxInteger>),<ws>, ',', <ws>, (<integer>/<minInteger>/<maxInteger>),<ws>,')');
+<s_type_integer_range> = <variable_str>, <integer_range>;
+<s_type_array> = <s_type>, <ws>, ('[', <ws>, ']');
+<s_type> = <variable_str>, ('.', <variable_str>)*;
+<s_typeof> = <s_type_array>/<s_type_integer_range>/<s_type>;
+<s_variable> = <variable_str>;
 <s_interface> = <variable_str>;
+<s_type_collection> = <variable_str>;
 
-<type_collection> = <annotation_block>?, <wsn>, "typeCollection", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, (<explicit_array_def>/<typedef>/<structure>/<enumeration>), <wsn>)+, '}', <wsn>;
+<type_collection> = <annotation_block>?, <wsn>, "typeCollection", <ws>, <s_variable>?, <wsn>, '{', <wsn>, <version>?, (<wsn>, (<const_def>/<explicit_array_def>/<typedef>/<structure>/<enumeration>/<union>/<map>), <wsn>)*, <wsn>, '}', <wsn>;
 <declaration> = <annotation_block>?, <wsn>, <s_typeof>, <ws_sole>+, <s_variable>, <wsn>;
-<attribute> = <annotation_block>?, <wsn>,"attribute", <ws_sole>+, <s_typeof>, <ws_sole>+, <s_variable>;
+<attribute_meta_information> = "readonly";
+<bool> = "true"/"false";
+<const_def> = <annotation_block>?, <wsn>, "const", <wsn>, <s_type>, <ws>, <s_variable>, <ws>, '=', <ws>, (<integer>/<bool>), <ws>, ','? , <wsn>;
+
+<attribute> = <annotation_block>?, <wsn>,"attribute", <ws_sole>+, <s_typeof>, <ws_sole>+, <s_variable>, <ws>, <attribute_meta_information>?;
 <enumeration> = <annotation_block>?, <wsn>, "enumeration", <ws>, <s_typeof>, <wsn>, '{', (<wsn> , <enum_value>, <wsn>)+, '}';
-<enum_value> = <s_variable>, <ws>, ('=', <ws>, <integer>)?, <ws>,','?,'\n';
-<structure> = <annotation_block>?, <wsn>, "struct", <ws>, <s_typeof>, <wsn>, '{', (<wsn>, <declaration>, <wsn>)+, '}', <wsn>;
+<enum_value> = <annotation_block>?, <wsn>, <s_variable>, <ws>, ('=', <ws>, <integer>)?, <ws>,','?, <wsn>;
+<union> = <annotation_block>?, <wsn>, "union", <ws>, <s_typeof>, <wsn>, <extends>?, <wsn>, '{', <wsn>, (<declaration>, <wsn>)*, '}';
+<map> = <annotation_block>?, <wsn>, "map", <ws>, <s_typeof>, <wsn>, '{', (<wsn> , <s_type>, <wsn>, "to", <wsn>, <s_type>, <wsn>)+, '}';
+
+<polymorphic> = "polymorphic";
+<structure> = <annotation_block>?, <wsn>, "struct", <ws>, <s_typeof>, <wsn>,(<polymorphic>/<extends>)?, <wsn>, '{', <wsn>, (<declaration>, <wsn>)*, '}', <wsn>;
 <broadcast> =  <annotation_block>?, <wsn>, "broadcast", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <out>?,  <wsn>, '}', <wsn>;
-<method> = <annotation_block>?, <wsn>, "method", <wsn>, <s_typeof>, <wsn>, '{', <wsn>, <method_in>?, <wsn>, <out>?, <wsn> ,'}', <wsn>;
+<method> =  <annotation_block>?, <wsn>, 
+            "method", <wsn>, 
+            <s_typeof>, <wsn>, 
+            <method_attribute>?, <wsn>,
+            '{', <wsn>, 
+            <method_in>?, <wsn>, 
+            <out>?, <wsn>,
+            '}', <wsn>;
+
+
+<method_attribute> = "fireAndForget";
+
 <method_in> = <annotation_block>?, <wsn>, "in", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
 <out> = <annotation_block>?, <wsn>, "out", <wsn>, '{', (<wsn>, <declaration>,  <wsn>)+, '}', <wsn>;
 <typedef> = <annotation_block>?, <wsn>, "typedef", <ws>, <s_type>, <ws>, "is", <ws>, <s_typeof>;
 <psm> = "WAAAAGH - Not Yet Implemented"; #Program State Machine#
-<explicit_array_def> = <annotation_block>?, <wsn>, "array", <wsn>, <s_variable>, <wsn>, "of", <wsn>, <s_type>, <wsn> ;# No idea why this exists or what it even means in an interface tbh#
+<explicit_array_def> = <annotation_block>?, <wsn>, "array", <wsn>, <s_variable>, <wsn>, "of", <wsn>, (<s_type_integer_range>/<s_type>), <wsn> ;# No idea why this exists or what it even means in an interface tbh#

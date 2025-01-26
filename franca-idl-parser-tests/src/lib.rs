@@ -9,6 +9,9 @@ mod test_broadcast;
 mod test_interface;
 mod test_comment;
 mod test_grammar;
+mod test_typecollection;
+mod test_import_model;
+mod test_map;
 use franca_idl_parser::*;
 
 use std::cell::RefCell;

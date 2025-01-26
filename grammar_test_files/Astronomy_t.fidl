@@ -3,7 +3,7 @@ package Pkg.Astronomy_t
 import model "Common_t.fidl"
 import model "Infrastructure_t.fidl"
 
-typeCollection {
+typeCollection NeedsANameYouFucks {
 	enumeration ObjectType_t {
 		eObject_Sun = 0
 		eObject_Moon = 1

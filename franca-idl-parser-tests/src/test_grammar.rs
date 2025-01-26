@@ -85,7 +85,7 @@ fn test_grammar_6() {
 }
 #[test]
 fn test_grammar_7() {
-    let file_path = "../grammar_test_files/SystemdManager.fidl";
+    let file_path = "../grammar_test_files/109-TestIntegerRange.fidl";
     let src = fs::read_to_string(file_path);
     let src = match src {
         Err(err) => {

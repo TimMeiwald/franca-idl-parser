@@ -62,3 +62,21 @@ fn test_enumeration_5() {
     let result = shared(src, enumeration::<BasicContext>, Rules::enumeration); 
     assert_eq!(result, (true, src.len() as u32));
 }
+#[test]
+fn test_enumeration_6() {
+    let src = r#"<** @description : Repeat modes for playback. **>
+	enumeration RepeatMode {
+		A C D E F
+	}"#;
+    let result = shared(src, enumeration::<BasicContext>, Rules::enumeration); 
+    assert_eq!(result, (true, src.len() as u32));
+}
+#[test]
+fn test_enumeration_7() {
+    let src = r#"<** @description : Repeat modes for playback. **>
+	enumeration RepeatMode {
+		A, C, D, E, F,
+	}"#;
+    let result = shared(src, enumeration::<BasicContext>, Rules::enumeration); 
+    assert_eq!(result, (true, src.len() as u32));
+}
